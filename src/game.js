@@ -7,6 +7,8 @@ const PLAYER_HEIGHT = 1.65;
 const PLAYER_RADIUS = 0.72;
 const DISCOVERY_RADIUS = 5;
 const BEST_KEY = "echo-maze-best-time";
+const MIN_PITCH = -Math.PI / 2 + 0.12;
+const MAX_PITCH = Math.PI / 2 - 0.12;
 
 export class EchoMazeGame {
   constructor(root) {
@@ -26,6 +28,13 @@ export class EchoMazeGame {
       left: false,
       right: false,
       sprint: false
+    };
+    this.touchLook = {
+      active: false,
+      pointerId: null,
+      lastX: 0,
+      lastY: 0,
+      sensitivity: 0.0046
     };
     this.state = this.initialState();
     this.discovered = new Set();
@@ -51,6 +60,7 @@ export class EchoMazeGame {
     this.interactTarget = null;
     this.trapCooldown = 0;
     this.lowHealthPulse = 0;
+    this.isTouchDevice = navigator.maxTouchPoints > 0 || matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
   }
 
   initialState() {
@@ -113,6 +123,7 @@ export class EchoMazeGame {
     this.scene.fog = new THREE.FogExp2(0x070907, 0.036);
 
     this.camera = new THREE.PerspectiveCamera(72, window.innerWidth / window.innerHeight, 0.08, 260);
+    this.camera.rotation.order = "YXZ";
     this.camera.position.set(0, PLAYER_HEIGHT, 0);
 
     this.renderer = new THREE.WebGLRenderer({
@@ -165,6 +176,10 @@ export class EchoMazeGame {
 
   player() {
     return this.controls?.object ?? this.camera;
+  }
+
+  usesTouchControls() {
+    return this.isTouchDevice || window.innerWidth <= 900;
   }
 
   clearWorld() {
@@ -505,6 +520,7 @@ export class EchoMazeGame {
     rig.position.set(start.x, PLAYER_HEIGHT, start.z);
     rig.rotation.set(0, 0, 0);
     this.camera.rotation.set(0, 0, 0);
+    this.camera.rotation.order = "YXZ";
   }
 
   bindEvents() {
@@ -535,6 +551,15 @@ export class EchoMazeGame {
       button.addEventListener("pointercancel", () => set(false));
       button.addEventListener("pointerleave", () => set(false));
     });
+
+    this.renderer.domElement.addEventListener("pointerdown", (event) => this.startTouchLook(event), {
+      passive: false
+    });
+    this.renderer.domElement.addEventListener("pointermove", (event) => this.updateTouchLook(event), {
+      passive: false
+    });
+    this.renderer.domElement.addEventListener("pointerup", (event) => this.stopTouchLook(event));
+    this.renderer.domElement.addEventListener("pointercancel", (event) => this.stopTouchLook(event));
 
     this.controls.addEventListener("unlock", () => {
       if (this.state.mode === "running" && !this.state.paused) {
@@ -575,9 +600,43 @@ export class EchoMazeGame {
   }
 
   tryLockPointer() {
+    if (this.usesTouchControls()) return;
     if (!this.controls.isLocked && document.hasFocus()) {
       this.controls.lock();
     }
+  }
+
+  startTouchLook(event) {
+    if (!this.usesTouchControls() || this.state.mode !== "running" || this.state.paused) return;
+    event.preventDefault();
+    this.touchLook.active = true;
+    this.touchLook.pointerId = event.pointerId;
+    this.touchLook.lastX = event.clientX;
+    this.touchLook.lastY = event.clientY;
+    this.renderer.domElement.setPointerCapture?.(event.pointerId);
+  }
+
+  updateTouchLook(event) {
+    if (!this.touchLook.active || event.pointerId !== this.touchLook.pointerId) return;
+    event.preventDefault();
+    const dx = event.clientX - this.touchLook.lastX;
+    const dy = event.clientY - this.touchLook.lastY;
+    this.touchLook.lastX = event.clientX;
+    this.touchLook.lastY = event.clientY;
+
+    this.camera.rotation.y -= dx * this.touchLook.sensitivity;
+    this.camera.rotation.x = THREE.MathUtils.clamp(
+      this.camera.rotation.x - dy * this.touchLook.sensitivity,
+      MIN_PITCH,
+      MAX_PITCH
+    );
+  }
+
+  stopTouchLook(event) {
+    if (event.pointerId !== this.touchLook.pointerId) return;
+    this.touchLook.active = false;
+    this.touchLook.pointerId = null;
+    this.renderer.domElement.releasePointerCapture?.(event.pointerId);
   }
 
   togglePause(forcePause = false) {

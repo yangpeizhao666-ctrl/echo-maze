@@ -61,6 +61,7 @@ button:disabled {
   display: block;
   width: 100vw;
   height: 100vh;
+  touch-action: none;
 }
 
 .hud {
@@ -258,12 +259,14 @@ button:disabled {
   grid-template-rows: repeat(3, 48px);
   gap: 7px;
   pointer-events: auto;
+  touch-action: none;
 }
 
 .touch-controls button {
   min-height: 48px;
   background: rgba(9, 12, 10, 0.7);
   backdrop-filter: blur(8px);
+  touch-action: none;
 }
 
 .touch-controls [data-move="forward"] {
