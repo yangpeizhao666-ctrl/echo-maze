@@ -12,10 +12,11 @@ await writeFile(
     if (response.status !== 404) return response;
 
     const accept = request.headers.get("accept") || "";
-    if (!accept.includes("text/html")) return response;
-
     const url = new URL(request.url);
-    url.pathname = "/";
+    const looksLikePage = request.mode === "navigate" || accept.includes("text/html") || !url.pathname.includes(".");
+    if (!looksLikePage) return response;
+
+    url.pathname = "/index.html";
     return env.ASSETS.fetch(new Request(url, request));
   }
 };
