@@ -1,5 +1,10 @@
 const CACHE_NAME = "echo-maze-v1";
-const ASSETS = ["/", "/manifest.webmanifest", "/icon.svg"];
+const APP_ROOT = new URL("./", self.location.href);
+const ASSETS = [
+  APP_ROOT.href,
+  new URL("manifest.webmanifest", APP_ROOT).href,
+  new URL("icon.svg", APP_ROOT).href
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
@@ -21,15 +26,7 @@ self.addEventListener("fetch", (event) => {
   if (requestUrl.origin !== self.location.origin) return;
 
   if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("/", copy));
-          return response;
-        })
-        .catch(() => caches.match("/") || caches.match(event.request))
-    );
+    event.respondWith(fetch(event.request).catch(() => caches.match(APP_ROOT.href) || caches.match(event.request)));
     return;
   }
 
