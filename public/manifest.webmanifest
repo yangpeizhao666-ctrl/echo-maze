@@ -1,0 +1,19 @@
+{
+  "name": "Echo Maze",
+  "short_name": "Echo Maze",
+  "description": "A first-person 3D maze exploration game.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#070907",
+  "theme_color": "#070907",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070907" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Echo Maze" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <title>Echo Maze</title>
+  </head>
+  <body>
+    <div id="game-root"></div>
+
+    <div class="hud hud-top">
+      <div class="brand">
+        <strong>Echo Maze</strong>
+        <span id="seedLabel">Seed -</span>
+      </div>
+      <div class="meter-stack">
+        <label>
+          <span>Health</span>
+          <i><b id="healthBar"></b></i>
+        </label>
+        <label>
+          <span>Stamina</span>
+          <i><b id="staminaBar"></b></i>
+        </label>
+      </div>
+      <div class="objective-strip">
+        <span id="prismHud">Prisms 0/3</span>
+        <span id="relayHud">Relays 0/4</span>
+        <span id="timeHud">00:00</span>
+      </div>
+    </div>
+
+    <div class="hud minimap-panel">
+      <canvas id="minimap" width="220" height="220"></canvas>
+      <div id="compass" class="compass">N</div>
+    </div>
+
+    <div class="hud status-panel">
+      <div id="objectiveText">Find the first prism.</div>
+      <div id="promptText"></div>
+      <ol id="logList"></ol>
+    </div>
+
+    <div class="hud action-dock">
+      <button id="actionBtn" type="button">Action</button>
+      <button id="mapBtn" type="button">Map</button>
+      <button id="pauseBtn" type="button">Pause</button>
+    </div>
+
+    <div class="touch-controls" aria-label="Movement controls">
+      <button type="button" data-move="forward">&uarr;</button>
+      <button type="button" data-move="left">&larr;</button>
+      <button type="button" data-move="back">&darr;</button>
+      <button type="button" data-move="right">&rarr;</button>
+      <button type="button" data-move="sprint">Run</button>
+    </div>
+
+    <div id="overlay" class="overlay">
+      <div class="menu">
+        <h1>Echo Maze</h1>
+        <p id="menuSubtitle">A sealed labyrinth waits below the relay stones.</p>
+        <div class="menu-actions">
+          <button id="startBtn" type="button">Enter Maze</button>
+          <button id="newSeedBtn" type="button">New Seed</button>
+        </div>
+        <dl class="run-stats">
+          <div>
+            <dt>Prisms</dt>
+            <dd id="menuPrisms">0/3</dd>
+          </div>
+          <div>
+            <dt>Relays</dt>
+            <dd id="menuRelays">0/4</dd>
+          </div>
+          <div>
+            <dt>Best</dt>
+            <dd id="bestTime">--:--</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

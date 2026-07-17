@@ -1,0 +1,488 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: #070907;
+  color: #eef3e9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: #070907;
+}
+
+button {
+  min-height: 42px;
+  border: 1px solid rgba(238, 243, 233, 0.18);
+  border-radius: 8px;
+  background: rgba(20, 25, 21, 0.86);
+  color: #eef3e9;
+  font: inherit;
+  font-weight: 740;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+}
+
+button:hover,
+button:focus-visible {
+  border-color: rgba(128, 231, 186, 0.82);
+  background: rgba(39, 56, 43, 0.94);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+#game-root {
+  position: fixed;
+  inset: 0;
+}
+
+#game-root canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+.hud {
+  position: fixed;
+  z-index: 5;
+  user-select: none;
+}
+
+.hud-top {
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: grid;
+  grid-template-columns: minmax(170px, 240px) minmax(260px, 420px) auto;
+  gap: 12px;
+  align-items: start;
+  pointer-events: none;
+}
+
+.brand,
+.meter-stack,
+.objective-strip,
+.minimap-panel,
+.status-panel,
+.action-dock {
+  border: 1px solid rgba(238, 243, 233, 0.13);
+  border-radius: 8px;
+  background: rgba(8, 11, 9, 0.66);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  min-height: 64px;
+  padding: 11px 13px;
+}
+
+.brand strong,
+.brand span {
+  display: block;
+}
+
+.brand strong {
+  font-size: 1.24rem;
+  letter-spacing: 0;
+}
+
+.brand span {
+  margin-top: 4px;
+  color: #aeb9a8;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.meter-stack {
+  display: grid;
+  gap: 8px;
+  padding: 11px 13px;
+}
+
+.meter-stack label {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 760;
+  text-transform: uppercase;
+  color: #bfccb8;
+}
+
+.meter-stack i {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(238, 243, 233, 0.11);
+}
+
+.meter-stack b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 140ms ease;
+}
+
+#healthBar {
+  background: linear-gradient(90deg, #dd665a, #ffd16b);
+}
+
+#staminaBar {
+  background: linear-gradient(90deg, #4fc6a1, #86d9f4);
+}
+
+.objective-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(84px, auto));
+  gap: 8px;
+  justify-content: end;
+  padding: 9px;
+}
+
+.objective-strip span {
+  min-height: 42px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  background: rgba(238, 243, 233, 0.07);
+  color: #eef3e9;
+  font-size: 0.86rem;
+  font-weight: 760;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.minimap-panel {
+  top: 94px;
+  right: 14px;
+  width: 238px;
+  padding: 8px;
+}
+
+#minimap {
+  display: block;
+  width: 220px;
+  height: 220px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.34);
+}
+
+.compass {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(241, 210, 117, 0.14);
+  color: #f1d275;
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.status-panel {
+  left: 14px;
+  bottom: 14px;
+  width: min(470px, calc(100vw - 28px));
+  min-height: 108px;
+  padding: 12px 14px;
+}
+
+#objectiveText {
+  color: #eef3e9;
+  font-size: 1rem;
+  font-weight: 760;
+}
+
+#promptText {
+  min-height: 21px;
+  margin-top: 4px;
+  color: #f1d275;
+  font-size: 0.9rem;
+  font-weight: 720;
+}
+
+#logList {
+  display: grid;
+  gap: 3px;
+  margin: 9px 0 0;
+  padding-left: 19px;
+  color: #aeb9a8;
+  font-size: 0.82rem;
+}
+
+.action-dock {
+  right: 14px;
+  bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 90px);
+  gap: 8px;
+  padding: 8px;
+  pointer-events: auto;
+}
+
+.touch-controls {
+  position: fixed;
+  z-index: 6;
+  left: 16px;
+  bottom: 144px;
+  display: none;
+  grid-template-columns: repeat(3, 54px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 7px;
+  pointer-events: auto;
+}
+
+.touch-controls button {
+  min-height: 48px;
+  background: rgba(9, 12, 10, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.touch-controls [data-move="forward"] {
+  grid-column: 2;
+}
+
+.touch-controls [data-move="left"] {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.touch-controls [data-move="back"] {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.touch-controls [data-move="right"] {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.touch-controls [data-move="sprint"] {
+  grid-column: 1 / 4;
+  grid-row: 3;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(105, 138, 84, 0.2), transparent 32%),
+    rgba(2, 3, 3, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.menu {
+  width: min(520px, 100%);
+  border: 1px solid rgba(238, 243, 233, 0.16);
+  border-radius: 8px;
+  background: rgba(11, 14, 12, 0.86);
+  padding: 26px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+}
+
+.menu h1,
+.menu p {
+  margin: 0;
+}
+
+.menu h1 {
+  font-size: clamp(2.3rem, 7vw, 4.6rem);
+  line-height: 0.94;
+  letter-spacing: 0;
+}
+
+.menu p {
+  margin-top: 12px;
+  color: #b7c3b0;
+  font-size: 1rem;
+  line-height: 1.48;
+}
+
+.menu-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.menu-actions button:first-child {
+  background: #547d56;
+  border-color: rgba(177, 235, 159, 0.48);
+}
+
+.run-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 18px 0 0;
+}
+
+.run-stats div {
+  min-width: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(238, 243, 233, 0.07);
+}
+
+.run-stats dt {
+  color: #aeb9a8;
+  font-size: 0.73rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.run-stats dd {
+  margin: 2px 0 0;
+  color: #eef3e9;
+  font-size: 1.1rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .hud-top {
+    grid-template-columns: 1fr;
+    right: auto;
+    width: min(390px, calc(100vw - 28px));
+  }
+
+  .objective-strip {
+    justify-content: stretch;
+  }
+
+  .minimap-panel {
+    width: 168px;
+  }
+
+  #minimap {
+    width: 150px;
+    height: 150px;
+  }
+
+  .touch-controls {
+    display: grid;
+  }
+
+  .action-dock {
+    grid-template-columns: repeat(3, minmax(72px, 1fr));
+    width: min(310px, calc(100vw - 28px));
+  }
+}
+
+@media (max-width: 620px) {
+  .hud-top {
+    top: 8px;
+    left: 8px;
+    width: calc(100vw - 16px);
+    gap: 7px;
+  }
+
+  .brand {
+    min-height: 48px;
+    padding: 8px 10px;
+  }
+
+  .brand strong {
+    font-size: 1rem;
+  }
+
+  .meter-stack {
+    padding: 8px 10px;
+  }
+
+  .objective-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 7px;
+  }
+
+  .objective-strip span {
+    min-height: 34px;
+    padding: 8px 6px;
+    font-size: 0.75rem;
+  }
+
+  .minimap-panel {
+    top: 198px;
+    right: 8px;
+    bottom: auto;
+    width: 126px;
+    padding: 7px;
+  }
+
+  #minimap {
+    width: 110px;
+    height: 110px;
+  }
+
+  .status-panel {
+    left: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+    min-height: 88px;
+    padding: 10px;
+  }
+
+  .action-dock {
+    right: 8px;
+    bottom: 104px;
+    width: 210px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    transform: none;
+  }
+
+  .touch-controls {
+    left: 8px;
+    bottom: 112px;
+    grid-template-columns: repeat(3, 48px);
+    grid-template-rows: repeat(3, 44px);
+    gap: 6px;
+  }
+
+  .touch-controls button {
+    min-height: 44px;
+  }
+
+  #logList {
+    display: none;
+  }
+
+  .menu {
+    padding: 20px;
+  }
+}

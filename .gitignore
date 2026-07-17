@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.verify/
+.idea/
+dev-server.log
+dev-server.err
+*.local
