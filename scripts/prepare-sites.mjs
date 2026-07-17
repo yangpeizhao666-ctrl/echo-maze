@@ -1,4 +1,10 @@
-import { copyFile, mkdir, writeFile } from "node:fs/promises";
+import { cp, copyFile, mkdir, readdir, writeFile } from "node:fs/promises";
+
+await mkdir("dist/client", { recursive: true });
+for (const entry of await readdir("dist", { withFileTypes: true })) {
+  if (entry.name === "client" || entry.name === "server" || entry.name === ".openai") continue;
+  await cp(`dist/${entry.name}`, `dist/client/${entry.name}`, { recursive: true });
+}
 
 await mkdir("dist/server", { recursive: true });
 await mkdir("dist/.openai", { recursive: true });
